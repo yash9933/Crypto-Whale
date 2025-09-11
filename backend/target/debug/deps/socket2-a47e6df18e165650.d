@@ -1,0 +1,11 @@
+/Users/josephclark/rust_whaleTracker/sol_whale_tracker_backend/target/debug/deps/libsocket2-a47e6df18e165650.rmeta: /Users/josephclark/.cargo/registry/src/index.crates.io-6f17d22bba15001f/socket2-0.5.9/src/lib.rs /Users/josephclark/.cargo/registry/src/index.crates.io-6f17d22bba15001f/socket2-0.5.9/src/sockaddr.rs /Users/josephclark/.cargo/registry/src/index.crates.io-6f17d22bba15001f/socket2-0.5.9/src/socket.rs /Users/josephclark/.cargo/registry/src/index.crates.io-6f17d22bba15001f/socket2-0.5.9/src/sockref.rs /Users/josephclark/.cargo/registry/src/index.crates.io-6f17d22bba15001f/socket2-0.5.9/src/sys/unix.rs
+
+/Users/josephclark/rust_whaleTracker/sol_whale_tracker_backend/target/debug/deps/libsocket2-a47e6df18e165650.rlib: /Users/josephclark/.cargo/registry/src/index.crates.io-6f17d22bba15001f/socket2-0.5.9/src/lib.rs /Users/josephclark/.cargo/registry/src/index.crates.io-6f17d22bba15001f/socket2-0.5.9/src/sockaddr.rs /Users/josephclark/.cargo/registry/src/index.crates.io-6f17d22bba15001f/socket2-0.5.9/src/socket.rs /Users/josephclark/.cargo/registry/src/index.crates.io-6f17d22bba15001f/socket2-0.5.9/src/sockref.rs /Users/josephclark/.cargo/registry/src/index.crates.io-6f17d22bba15001f/socket2-0.5.9/src/sys/unix.rs
+
+/Users/josephclark/rust_whaleTracker/sol_whale_tracker_backend/target/debug/deps/socket2-a47e6df18e165650.d: /Users/josephclark/.cargo/registry/src/index.crates.io-6f17d22bba15001f/socket2-0.5.9/src/lib.rs /Users/josephclark/.cargo/registry/src/index.crates.io-6f17d22bba15001f/socket2-0.5.9/src/sockaddr.rs /Users/josephclark/.cargo/registry/src/index.crates.io-6f17d22bba15001f/socket2-0.5.9/src/socket.rs /Users/josephclark/.cargo/registry/src/index.crates.io-6f17d22bba15001f/socket2-0.5.9/src/sockref.rs /Users/josephclark/.cargo/registry/src/index.crates.io-6f17d22bba15001f/socket2-0.5.9/src/sys/unix.rs
+
+/Users/josephclark/.cargo/registry/src/index.crates.io-6f17d22bba15001f/socket2-0.5.9/src/lib.rs:
+/Users/josephclark/.cargo/registry/src/index.crates.io-6f17d22bba15001f/socket2-0.5.9/src/sockaddr.rs:
+/Users/josephclark/.cargo/registry/src/index.crates.io-6f17d22bba15001f/socket2-0.5.9/src/socket.rs:
+/Users/josephclark/.cargo/registry/src/index.crates.io-6f17d22bba15001f/socket2-0.5.9/src/sockref.rs:
+/Users/josephclark/.cargo/registry/src/index.crates.io-6f17d22bba15001f/socket2-0.5.9/src/sys/unix.rs:
