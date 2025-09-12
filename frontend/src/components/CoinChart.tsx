@@ -252,7 +252,7 @@ export const CoinChart: React.FC<CoinChartProps> = ({
       <CardHeader className="pb-2">
         <div className="flex justify-between items-center">
           <div>
-            <CardTitle className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-500">
+            <CardTitle className="text-transparent bg-clip-text bg-gradient-to-r from-[#CCD5FF] to-[#B8C5FF]">
               {coinName} Price Chart
             </CardTitle>
             <CardDescription className="text-white">
@@ -284,8 +284,8 @@ export const CoinChart: React.FC<CoinChartProps> = ({
               onClick={() => setTimeRange(range.days)}
               className={
                 timeRange === range.days
-                  ? "bg-gradient-to-r from-teal-500 to-cyan-600 text-white font-medium"
-                  : "border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-teal-300 hover:border-teal-500"
+                  ? "bg-gradient-to-r from-[#CCD5FF] to-[#B8C5FF] text-white font-medium"
+                  : "border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-pink-300 hover:border-pink-500"
               }
             >
               {range.label}

@@ -243,7 +243,7 @@ export const AddWalletModal: React.FC<AddWalletModalProps> = ({ open, onOpenChan
           <Button
             onClick={handleConnect}
             disabled={!selectedWalletType || !selectedChainType || !walletAddress || isConnecting}
-            className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700"
+            className="bg-gradient-to-r from-[#CCD5FF] to-[#B8C5FF] hover:from-[#B8C5FF] hover:to-[#A3B2FF]"
           >
             {isConnecting ? (
               <>Connecting...</>

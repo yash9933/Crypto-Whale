@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useSettingsStore } from '../store/store';
 import { 
   AlertCircle, 
   ArrowDown, 
@@ -284,7 +285,8 @@ const TransactionLog: React.FC = () => {
   console.log("TransactionLog component rendered");
   const { currentUser } = useAuth();
   const navigate = useNavigate();
-  const [darkMode, setDarkMode] = useState(true);
+  const { settings } = useSettingsStore();
+  const darkMode = settings.darkMode;
   
   // Filter and pagination states
   const [searchTerm, setSearchTerm] = useState("");
@@ -433,9 +435,9 @@ const TransactionLog: React.FC = () => {
   const renderAuthPrompt = () => {
     if (!currentUser) {
       return (
-        <Card className="w-full mb-6 bg-gray-800 border-gray-700 text-white">
+        <Card className={`w-full mb-6 ${cardClasses} ${darkMode ? "text-white" : "text-gray-900"}`}>
           <CardHeader>
-            <CardTitle className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-500">Authentication Required</CardTitle>
+            <CardTitle className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--title-gradient-from)] to-[var(--title-gradient-to)]">Authentication Required</CardTitle>
             <CardDescription className="text-gray-400">
               Please log in to access all transaction features
             </CardDescription>
@@ -444,7 +446,7 @@ const TransactionLog: React.FC = () => {
             <div className="flex gap-2">
               <Button 
                 onClick={() => navigate('/login')}
-                className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700"
+                className={`bg-gradient-to-r ${darkMode ? "from-[#CCD5FF] to-[#B8C5FF] hover:from-[#B8C5FF] hover:to-[#A3B2FF]" : "from-[#4169E1] to-[#2E4BC6] hover:from-[#2E4BC6] hover:to-[#1E3A8A]"}`}
               >
                 Go to Login
               </Button>
@@ -493,10 +495,14 @@ const TransactionLog: React.FC = () => {
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-teal-400 to-cyan-500 bg-clip-text text-transparent">
+            <h1 className={`text-3xl font-bold bg-gradient-to-r bg-clip-text text-transparent ${
+              darkMode 
+                ? "from-[#CCD5FF] to-[#B8C5FF]"  // Light lavender blue gradient for dark mode
+                : "from-[#4169E1] to-[#2E4BC6]"  // Royal blue gradient for light mode
+            }`}>
               Transaction History
             </h1>
-            <p className="text-white">
+            <p className={darkMode ? "text-white" : "text-gray-900"}>
               View and analyze your crypto transaction history
             </p>
           </div>
@@ -531,17 +537,17 @@ const TransactionLog: React.FC = () => {
           onValueChange={setActiveTab}
           className="mb-6"
         >
-          <TabsList className="grid grid-cols-2 w-full max-w-md mx-auto bg-gray-800">
+          <TabsList className={`grid grid-cols-2 w-full max-w-md mx-auto ${darkMode ? "bg-gray-800" : "bg-gray-200"}`}>
             <TabsTrigger 
               value="transactions"
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-teal-500 data-[state=active]:to-cyan-600 data-[state=active]:text-white"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#CCD5FF] data-[state=active]:to-[#B8C5FF] data-[state=active]:text-white"
             >
               <TableIcon className="h-4 w-4 mr-2" />
               Transactions
             </TabsTrigger>
             <TabsTrigger 
               value="analytics"
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-teal-500 data-[state=active]:to-cyan-600 data-[state=active]:text-white"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#CCD5FF] data-[state=active]:to-[#B8C5FF] data-[state=active]:text-white"
             >
               <BarChart3 className="h-4 w-4 mr-2" />
               Analytics
@@ -553,7 +559,7 @@ const TransactionLog: React.FC = () => {
             {/* Filters */}
             <Card className={`mb-6 ${cardClasses}`}>
               <CardHeader>
-                <CardTitle className="text-white">Filters</CardTitle>
+                <CardTitle className={darkMode ? "text-white" : "text-gray-900"}>Filters</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
@@ -563,15 +569,15 @@ const TransactionLog: React.FC = () => {
                       placeholder="Search transactions..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-8 bg-gray-700 border-gray-600 text-white"
+                      className={`pl-8 ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-gray-100 border-gray-300 text-gray-900"}`}
                     />
                   </div>
                   
                   <Select value={assetFilter} onValueChange={setAssetFilter}>
-                    <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                    <SelectTrigger className={`${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-gray-100 border-gray-300 text-gray-900"}`}>
                       <SelectValue placeholder="Asset" />
                     </SelectTrigger>
-                    <SelectContent className="bg-gray-700 border-gray-600 text-white">
+                    <SelectContent className={`${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-gray-100 border-gray-300 text-gray-900"}`}>
                       <SelectItem value="">All Assets</SelectItem>
                       {uniqueAssets.map(asset => (
                         <SelectItem key={asset} value={asset}>{asset}</SelectItem>
@@ -580,10 +586,10 @@ const TransactionLog: React.FC = () => {
                   </Select>
                   
                   <Select value={typeFilter} onValueChange={setTypeFilter}>
-                    <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                    <SelectTrigger className={`${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-gray-100 border-gray-300 text-gray-900"}`}>
                       <SelectValue placeholder="Type" />
                     </SelectTrigger>
-                    <SelectContent className="bg-gray-700 border-gray-600 text-white">
+                    <SelectContent className={`${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-gray-100 border-gray-300 text-gray-900"}`}>
                       <SelectItem value="">All Types</SelectItem>
                       {transactionTypes.map(type => (
                         <SelectItem key={type} value={type} className="capitalize">{type}</SelectItem>
@@ -592,10 +598,10 @@ const TransactionLog: React.FC = () => {
                   </Select>
                   
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                    <SelectTrigger className={`${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-gray-100 border-gray-300 text-gray-900"}`}>
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
-                    <SelectContent className="bg-gray-700 border-gray-600 text-white">
+                    <SelectContent className={`${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-gray-100 border-gray-300 text-gray-900"}`}>
                       <SelectItem value="">All Statuses</SelectItem>
                       {statusTypes.map(status => (
                         <SelectItem key={status} value={status} className="capitalize">{status}</SelectItem>
@@ -606,7 +612,7 @@ const TransactionLog: React.FC = () => {
                   <Button 
                     variant="outline" 
                     onClick={resetFilters}
-                    className="border-gray-600 text-white hover:bg-gray-700"
+                    className={`${darkMode ? "border-gray-600 text-white hover:bg-gray-700" : "border-gray-300 text-gray-900 hover:bg-gray-200"}`}
                   >
                     Reset Filters
                   </Button>
@@ -617,7 +623,7 @@ const TransactionLog: React.FC = () => {
             {/* Transactions Table */}
             <Card className={cardClasses}>
               <CardHeader>
-                <CardTitle className="text-white">Transactions</CardTitle>
+                <CardTitle className={darkMode ? "text-white" : "text-gray-900"}>Transactions</CardTitle>
                 <CardDescription className="text-gray-400">
                   {filteredTransactions.length} transactions found
                 </CardDescription>
@@ -628,11 +634,11 @@ const TransactionLog: React.FC = () => {
                     <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-teal-500"></div>
                   </div>
                 ) : paginatedTransactions.length === 0 ? (
-                  <div className="text-center py-16 text-white">
+                  <div className={`text-center py-16 ${darkMode ? "text-white" : "text-gray-900"}`}>
                     <p className="text-gray-400 mb-4">No transactions found</p>
                     <Button 
                       onClick={resetFilters}
-                      className="bg-gradient-to-r from-teal-500 to-cyan-600"
+                      className="bg-gradient-to-r from-[var(--button-gradient-from)] to-[var(--button-gradient-to)]"
                     >
                       Reset Filters
                     </Button>
@@ -644,7 +650,7 @@ const TransactionLog: React.FC = () => {
                         <TableHeader>
                           <TableRow className="border-gray-700">
                             <TableHead 
-                              className="text-white cursor-pointer"
+                              className={`${darkMode ? "text-white" : "text-gray-900"} cursor-pointer`}
                               onClick={() => handleSort("date")}
                             >
                               Date
@@ -654,10 +660,10 @@ const TransactionLog: React.FC = () => {
                                   <ArrowDown className="inline ml-1 h-4 w-4" />
                               )}
                             </TableHead>
-                            <TableHead className="text-white">Type</TableHead>
-                            <TableHead className="text-white">Asset</TableHead>
+                            <TableHead className={darkMode ? "text-white" : "text-gray-900"}>Type</TableHead>
+                            <TableHead className={darkMode ? "text-white" : "text-gray-900"}>Asset</TableHead>
                             <TableHead 
-                              className="text-white cursor-pointer"
+                              className={`${darkMode ? "text-white" : "text-gray-900"} cursor-pointer`}
                               onClick={() => handleSort("amount")}
                             >
                               Amount
@@ -668,7 +674,7 @@ const TransactionLog: React.FC = () => {
                               )}
                             </TableHead>
                             <TableHead 
-                              className="text-white cursor-pointer"
+                              className={`${darkMode ? "text-white" : "text-gray-900"} cursor-pointer`}
                               onClick={() => handleSort("price")}
                             >
                               Price
@@ -679,7 +685,7 @@ const TransactionLog: React.FC = () => {
                               )}
                             </TableHead>
                             <TableHead 
-                              className="text-white cursor-pointer"
+                              className={`${darkMode ? "text-white" : "text-gray-900"} cursor-pointer`}
                               onClick={() => handleSort("total")}
                             >
                               Total
@@ -689,15 +695,15 @@ const TransactionLog: React.FC = () => {
                                   <ArrowDown className="inline ml-1 h-4 w-4" />
                               )}
                             </TableHead>
-                            <TableHead className="text-white">Status</TableHead>
-                            <TableHead className="text-white">Details</TableHead>
+                            <TableHead className={darkMode ? "text-white" : "text-gray-900"}>Status</TableHead>
+                            <TableHead className={darkMode ? "text-white" : "text-gray-900"}>Details</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
                           {paginatedTransactions.map((tx) => (
                             <React.Fragment key={tx.id}>
-                              <TableRow className="border-gray-700 hover:bg-gray-700">
-                                <TableCell className="text-white">
+                              <TableRow className={`${darkMode ? "border-gray-700 hover:bg-gray-700" : "border-gray-200 hover:bg-gray-100"}`}>
+                                <TableCell className={darkMode ? "text-white" : "text-gray-900"}>
                                   {new Date(tx.date).toLocaleDateString()}
                                 </TableCell>
                                 <TableCell>
@@ -713,10 +719,10 @@ const TransactionLog: React.FC = () => {
                                     {tx.type.toUpperCase()}
                                   </Badge>
                                 </TableCell>
-                                <TableCell className="text-white">{tx.asset}</TableCell>
-                                <TableCell className="text-white">{tx.amount}</TableCell>
-                                <TableCell className="text-white">${tx.price.toFixed(2)}</TableCell>
-                                <TableCell className="text-white">${tx.total.toFixed(2)}</TableCell>
+                                <TableCell className={darkMode ? "text-white" : "text-gray-900"}>{tx.asset}</TableCell>
+                                <TableCell className={darkMode ? "text-white" : "text-gray-900"}>{tx.amount}</TableCell>
+                                <TableCell className={darkMode ? "text-white" : "text-gray-900"}>${tx.price.toFixed(2)}</TableCell>
+                                <TableCell className={darkMode ? "text-white" : "text-gray-900"}>${tx.total.toFixed(2)}</TableCell>
                                 <TableCell>
                                   <Badge 
                                     className={
@@ -744,11 +750,11 @@ const TransactionLog: React.FC = () => {
                               
                               {/* Transaction Details */}
                               {selectedTransaction === tx.id && (
-                                <TableRow className="border-gray-700 bg-gray-700">
+                                <TableRow className={`${darkMode ? "border-gray-700 bg-gray-700" : "border-gray-200 bg-gray-100"}`}>
                                   <TableCell colSpan={8} className="p-4">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                       <div>
-                                        <h4 className="text-white font-medium mb-2">Transaction Details</h4>
+                                        <h4 className={`${darkMode ? "text-white" : "text-gray-900"} font-medium mb-2`}>Transaction Details</h4>
                                         <p className="text-gray-300">
                                           <span className="text-gray-400">ID:</span> {tx.id}
                                         </p>
@@ -760,7 +766,7 @@ const TransactionLog: React.FC = () => {
                                         </p>
                                       </div>
                                       <div>
-                                        <h4 className="text-white font-medium mb-2">Source/Destination</h4>
+                                        <h4 className={`${darkMode ? "text-white" : "text-gray-900"} font-medium mb-2`}>Source/Destination</h4>
                                         {tx.exchange && (
                                           <p className="text-gray-300">
                                             <span className="text-gray-400">Exchange:</span> {tx.exchange}
@@ -792,7 +798,7 @@ const TransactionLog: React.FC = () => {
                             size="sm"
                             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                             disabled={currentPage === 1}
-                            className="border-gray-600 text-white hover:bg-gray-700"
+                            className={`${darkMode ? "border-gray-600 text-white hover:bg-gray-700" : "border-gray-300 text-gray-900 hover:bg-gray-200"}`}
                           >
                             <ChevronLeft className="h-4 w-4" />
                           </Button>
@@ -801,7 +807,7 @@ const TransactionLog: React.FC = () => {
                             size="sm"
                             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                             disabled={currentPage === totalPages}
-                            className="border-gray-600 text-white hover:bg-gray-700"
+                            className={`${darkMode ? "border-gray-600 text-white hover:bg-gray-700" : "border-gray-300 text-gray-900 hover:bg-gray-200"}`}
                           >
                             <ChevronRight className="h-4 w-4" />
                           </Button>
@@ -824,8 +830,8 @@ const TransactionLog: React.FC = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center">
-                    <DollarSign className="h-5 w-5 mr-2 text-teal-500" />
-                    <span className="text-2xl font-bold text-white">${stats.totalValue.toFixed(2)}</span>
+                    <DollarSign className="h-5 w-5 mr-2 text-pink-500" />
+                    <span className={`text-2xl font-bold ${darkMode ? "text-white" : "text-gray-900"}`}>${stats.totalValue.toFixed(2)}</span>
                   </div>
                 </CardContent>
               </Card>
@@ -837,7 +843,7 @@ const TransactionLog: React.FC = () => {
                 <CardContent>
                   <div className="flex items-center">
                     <DollarSign className="h-5 w-5 mr-2 text-yellow-500" />
-                    <span className="text-2xl font-bold text-white">${stats.totalFees.toFixed(2)}</span>
+                    <span className={`text-2xl font-bold ${darkMode ? "text-white" : "text-gray-900"}`}>${stats.totalFees.toFixed(2)}</span>
                   </div>
                 </CardContent>
               </Card>
@@ -866,8 +872,8 @@ const TransactionLog: React.FC = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center">
-                    <Clock className="h-5 w-5 mr-2 text-cyan-500" />
-                    <span className="text-2xl font-bold text-white">{filteredTransactions.length}</span>
+                    <Clock className="h-5 w-5 mr-2 text-pink-500" />
+                    <span className={`text-2xl font-bold ${darkMode ? "text-white" : "text-gray-900"}`}>{filteredTransactions.length}</span>
                   </div>
                 </CardContent>
               </Card>
@@ -878,7 +884,7 @@ const TransactionLog: React.FC = () => {
               {/* Transaction Volume Chart */}
               <Card className={cardClasses}>
                 <CardHeader>
-                  <CardTitle className="text-white">Transaction Volume Over Time</CardTitle>
+                  <CardTitle className={darkMode ? "text-white" : "text-gray-900"}>Transaction Volume Over Time</CardTitle>
                   <CardDescription className="text-gray-400">
                     Daily transaction volume in USD
                   </CardDescription>
@@ -886,7 +892,7 @@ const TransactionLog: React.FC = () => {
                 <CardContent>
                   <div className="h-80 w-full">
                     {/* Placeholder for chart - in a real app, use a charting library like recharts */}
-                    <div className="bg-gray-700 h-full w-full rounded-md p-4 flex flex-col">
+                    <div className={`${darkMode ? "bg-gray-700" : "bg-gray-100"} h-full w-full rounded-md p-4 flex flex-col`}>
                       <div className="flex justify-between mb-2">
                         <span className="text-xs text-gray-400">Volume</span>
                         <span className="text-xs text-gray-400">Date</span>
@@ -895,7 +901,7 @@ const TransactionLog: React.FC = () => {
                         {volumeChartData.map((item, index) => (
                           <div 
                             key={index} 
-                            className="flex-1 mx-0.5 bg-gradient-to-t from-teal-600 to-cyan-400 rounded-t-sm"
+                            className="flex-1 mx-0.5 bg-gradient-to-t from-pink-600 to-pink-400 rounded-t-sm"
                             style={{ 
                               height: `${Math.min(100, (item.value / Math.max(...volumeChartData.map(d => d.value))) * 100)}%`,
                             }}
@@ -921,7 +927,7 @@ const TransactionLog: React.FC = () => {
               {/* Asset Allocation Chart */}
               <Card className={cardClasses}>
                 <CardHeader>
-                  <CardTitle className="text-white">Asset Allocation</CardTitle>
+                  <CardTitle className={darkMode ? "text-white" : "text-gray-900"}>Asset Allocation</CardTitle>
                   <CardDescription className="text-gray-400">
                     Distribution of transaction value by asset
                   </CardDescription>
@@ -929,9 +935,9 @@ const TransactionLog: React.FC = () => {
                 <CardContent>
                   <div className="h-80 w-full">
                     {/* Placeholder for pie chart */}
-                    <div className="bg-gray-700 h-full w-full rounded-md p-4 flex flex-col items-center justify-center">
+                    <div className={`${darkMode ? "bg-gray-700" : "bg-gray-100"} h-full w-full rounded-md p-4 flex flex-col items-center justify-center`}>
                       <div className="relative h-48 w-48 mb-4">
-                        <div className="absolute inset-0 rounded-full border-8 border-gray-600"></div>
+                        <div className={`absolute inset-0 rounded-full border-8 ${darkMode ? "border-gray-600" : "border-gray-300"}`}></div>
                         {assetAllocationData.map((item, index) => {
                           const total = assetAllocationData.reduce((sum, i) => sum + i.value, 0);
                           const percentage = (item.value / total) * 100;
@@ -955,7 +961,7 @@ const TransactionLog: React.FC = () => {
                           return (
                             <div key={index} className="flex items-center">
                               <div className={`h-3 w-3 ${colors[index % colors.length]} rounded-full mr-2`}></div>
-                              <span className="text-xs text-white">{item.name}</span>
+                              <span className={`text-xs ${darkMode ? "text-white" : "text-gray-900"}`}>{item.name}</span>
                             </div>
                           );
                         })}
@@ -969,7 +975,7 @@ const TransactionLog: React.FC = () => {
             {/* Transaction Type Distribution */}
             <Card className={cardClasses}>
               <CardHeader>
-                <CardTitle className="text-white">Transaction Type Distribution</CardTitle>
+                  <CardTitle className={darkMode ? "text-white" : "text-gray-900"}>Transaction Type Distribution</CardTitle>
                 <CardDescription className="text-gray-400">
                   Number of transactions by type
                 </CardDescription>
@@ -977,17 +983,17 @@ const TransactionLog: React.FC = () => {
               <CardContent>
                 <div className="h-40 w-full">
                   {/* Placeholder for horizontal bar chart */}
-                  <div className="bg-gray-700 h-full w-full rounded-md p-4 flex flex-col justify-center">
+                  <div className={`${darkMode ? "bg-gray-700" : "bg-gray-100"} h-full w-full rounded-md p-4 flex flex-col justify-center`}>
                     {transactionTypeData.map((item, index) => {
                       const max = Math.max(...transactionTypeData.map(d => d.value));
                       const colors = ['bg-green-500', 'bg-red-500', 'bg-blue-500'];
                       return (
                         <div key={index} className="mb-3 last:mb-0">
                           <div className="flex justify-between mb-1">
-                            <span className="text-xs text-white capitalize">{item.name}</span>
+                            <span className={`text-xs ${darkMode ? "text-white" : "text-gray-900"} capitalize`}>{item.name}</span>
                             <span className="text-xs text-gray-400">{item.value}</span>
                           </div>
-                          <div className="h-4 bg-gray-600 rounded-full overflow-hidden">
+                          <div className={`h-4 ${darkMode ? "bg-gray-600" : "bg-gray-300"} rounded-full overflow-hidden`}>
                             <div 
                               className={`h-full ${colors[index % colors.length]}`}
                               style={{ width: `${(item.value / max) * 100}%` }}

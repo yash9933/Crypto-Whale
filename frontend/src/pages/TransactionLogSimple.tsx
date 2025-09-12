@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
+import { useSettingsStore } from '../store/store';
 import { 
   CalendarIcon, 
   Download, 
@@ -336,6 +337,8 @@ const formatTransactionType = (type: string) => {
 
 const TransactionHistory: React.FC = () => {
   const navigate = useNavigate();
+  const { settings } = useSettingsStore();
+  const darkMode = settings.darkMode;
   const [transactions, setTransactions] = useState<Transaction[]>(mockTransactions);
   const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>(mockTransactions);
   const [searchTerm, setSearchTerm] = useState('');
@@ -500,14 +503,23 @@ const TransactionHistory: React.FC = () => {
       default: return "bg-gray-500 hover:bg-gray-600";
     }
   };
+
+  // Theme classes
+  const cardClasses = darkMode 
+    ? "bg-gray-800 border-gray-700" 
+    : "bg-white border-gray-200";
   
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
+    <div className={`min-h-screen ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"} p-6`}>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-teal-400 to-cyan-500 bg-clip-text text-transparent">
+            <h1 className={`text-3xl font-bold bg-gradient-to-r bg-clip-text text-transparent ${
+              darkMode 
+                ? "from-[#CCD5FF] to-[#B8C5FF]"  // Light lavender blue gradient for dark mode
+                : "from-[#4169E1] to-[#2E4BC6]"  // Royal blue gradient for light mode
+            }`}>
               Transaction History
             </h1>
             <p className="text-gray-400 mt-1">
@@ -516,25 +528,25 @@ const TransactionHistory: React.FC = () => {
           </div>
           <div className="flex items-center gap-4 mt-4 md:mt-0">
             <Button 
+              onClick={() => exportToCSV(filteredTransactions)}
+              className={`bg-gradient-to-r ${darkMode ? "from-[#CCD5FF] to-[#B8C5FF] hover:from-[#B8C5FF] hover:to-[#A3B2FF]" : "from-[#4169E1] to-[#2E4BC6] hover:from-[#2E4BC6] hover:to-[#1E3A8A]"}`}
+            >
+              <Download className="mr-2 h-4 w-4" />
+              Export CSV
+            </Button>
+            <Button 
               onClick={() => navigate('/dashboard')}
               variant="outline" 
               className="border-teal-500 hover:bg-gray-800 hover:text-teal-300 text-teal-400"
             >
               Back to Dashboard
             </Button>
-            <Button 
-              onClick={() => exportToCSV(filteredTransactions)}
-              className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700"
-            >
-              <Download className="mr-2 h-4 w-4" />
-              Export CSV
-            </Button>
           </div>
         </div>
         
         {/* Transaction Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className={cardClasses}>
             <CardContent className="pt-6">
               <div className="flex justify-between items-center">
                 <div>
@@ -548,7 +560,7 @@ const TransactionHistory: React.FC = () => {
             </CardContent>
           </Card>
           
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className={cardClasses}>
             <CardContent className="pt-6">
               <div className="flex justify-between items-center">
                 <div>
@@ -562,7 +574,7 @@ const TransactionHistory: React.FC = () => {
             </CardContent>
           </Card>
           
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className={cardClasses}>
             <CardContent className="pt-6">
               <div className="flex justify-between items-center">
                 <div>
@@ -576,7 +588,7 @@ const TransactionHistory: React.FC = () => {
             </CardContent>
           </Card>
           
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className={cardClasses}>
             <CardContent className="pt-6">
               <div className="flex justify-between items-center">
                 <div>
@@ -592,7 +604,7 @@ const TransactionHistory: React.FC = () => {
         </div>
         
         {/* Filters */}
-        <Card className="bg-gray-800 border-gray-700 mb-6">
+        <Card className={`${cardClasses} mb-6`}>
           <CardHeader>
             <CardTitle className="text-lg flex items-center">
               <Filter className="w-5 h-5 mr-2" />
@@ -723,11 +735,11 @@ const TransactionHistory: React.FC = () => {
         </Card>
         
         {/* Transaction Table */}
-        <Card className="bg-gray-800 border-gray-700">
+        <Card className={cardClasses}>
           <CardContent className="p-0">
             <div className="overflow-x-auto">
               <Table>
-                <TableHeader className="bg-gray-900">
+                <TableHeader className={darkMode ? "bg-gray-900" : "bg-gray-200"}>
                   <TableRow>
                     <TableHead 
                       className="text-gray-300 cursor-pointer hover:text-teal-400"
@@ -870,7 +882,7 @@ const TransactionHistory: React.FC = () => {
                               href={tx.explorerUrl} 
                               target="_blank" 
                               rel="noopener noreferrer"
-                              className="flex items-center text-teal-500 hover:text-teal-400"
+                              className="flex items-center text-pink-500 hover:text-pink-400"
                               onClick={(e) => e.stopPropagation()}
                             >
                               {truncate(tx.txid, 8)}
@@ -913,11 +925,11 @@ const TransactionHistory: React.FC = () => {
         {/* Transaction Details Modal */}
         {showTransactionDetails && selectedTransaction && (
           <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-            <div className="bg-gray-800 rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+            <div className={`${darkMode ? "bg-gray-800" : "bg-white"} rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto`}>
               <div className="p-6">
                 <div className="flex justify-between items-start mb-6">
                   <div>
-                    <h2 className="text-xl font-bold text-white">Transaction Details</h2>
+                    <h2 className={`text-xl font-bold ${darkMode ? "text-white" : "text-gray-900"}`}>Transaction Details</h2>
                     <p className="text-gray-400 text-sm">
                       {formatDate(selectedTransaction.timestamp)}
                     </p>
@@ -1062,7 +1074,7 @@ const TransactionHistory: React.FC = () => {
                   
                   {selectedTransaction.explorerUrl && (
                     <Button 
-                      className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700"
+                      className={`bg-gradient-to-r ${darkMode ? "from-[#CCD5FF] to-[#B8C5FF] hover:from-[#B8C5FF] hover:to-[#A3B2FF]" : "from-[#4169E1] to-[#2E4BC6] hover:from-[#2E4BC6] hover:to-[#1E3A8A]"}`}
                       onClick={() => window.open(selectedTransaction.explorerUrl, '_blank')}
                     >
                       <ExternalLink className="mr-2 h-4 w-4" />

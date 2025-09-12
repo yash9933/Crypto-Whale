@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { useSettingsStore } from '../store/store';
 
 const MarketData = () => {
   const { currentUser } = useAuth();
@@ -15,17 +16,11 @@ const MarketData = () => {
   const [coins, setCoins] = useState<Coin[]>([]);
   const [selectedCoin, setSelectedCoin] = useState<Coin | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [darkMode, setDarkMode] = useState(true); // Match the dashboard theme
   const [globalData, setGlobalData] = useState<any>(null);
   const navigate = useNavigate();
+  const { settings } = useSettingsStore();
+  const darkMode = settings.darkMode;
 
-  // Get the dark mode state from localStorage if available
-  useEffect(() => {
-    const storedDarkMode = localStorage.getItem("darkMode");
-    if (storedDarkMode !== null) {
-      setDarkMode(storedDarkMode === "true");
-    }
-  }, []);
 
   // Fetch top coins and global market data
   useEffect(() => {
@@ -176,12 +171,14 @@ const MarketData = () => {
     ? "bg-gray-800 border-gray-700" 
     : "bg-white border-gray-200";
   
-  const textHighlightClass = "text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-500";
+  const textHighlightClass = darkMode 
+    ? "text-transparent bg-clip-text bg-gradient-to-r from-[#CCD5FF] to-[#B8C5FF]"  // Light lavender blue gradient for dark mode
+    : "text-transparent bg-clip-text bg-gradient-to-r from-[#4169E1] to-[#2E4BC6]"; // Royal blue gradient for light mode
 
   if (!currentUser) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <Card className="w-full max-w-md bg-gray-900 text-white">
+      <div className={`min-h-screen ${darkMode ? "bg-black" : "bg-gray-100"} flex items-center justify-center`}>
+        <Card className={`w-full max-w-md ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}>
           <CardHeader>
             <CardTitle>Authentication Required</CardTitle>
             <CardDescription className="text-gray-400">
@@ -191,7 +188,11 @@ const MarketData = () => {
           <CardContent>
             <Button 
               onClick={() => navigate('/login')}
-              className="w-full bg-gradient-to-r from-teal-500 to-cyan-600"
+              className={`w-full bg-gradient-to-r ${
+                darkMode 
+                  ? "from-[#CCD5FF] to-[#B8C5FF] hover:from-[#B8C5FF] hover:to-[#A3B2FF]"  // Light lavender blue gradient for dark mode
+                  : "from-[#4169E1] to-[#2E4BC6] hover:from-[#2E4BC6] hover:to-[#1E3A8A]"  // Royal blue gradient for light mode
+              }`}
             >
               Go to Login
             </Button>
@@ -207,7 +208,11 @@ const MarketData = () => {
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-teal-400 to-cyan-500 bg-clip-text text-transparent">
+            <h1 className={`text-3xl font-bold bg-gradient-to-r bg-clip-text text-transparent ${
+              darkMode 
+                ? "from-[#CCD5FF] to-[#B8C5FF]"  // Light lavender blue gradient for dark mode
+                : "from-[#4169E1] to-[#2E4BC6]"  // Royal blue gradient for light mode
+            }`}>
               Cryptocurrency Market Data
             </h1>
             <p className="text-white">
@@ -216,13 +221,6 @@ const MarketData = () => {
           </div>
           
           <div className="mt-4 md:mt-0 flex items-center space-x-2">
-            <Button
-              variant="outline"
-              onClick={() => navigate('/dashboard')}
-              className="border-teal-500 text-teal-400 hover:bg-gray-700 hover:text-teal-300 mr-2"
-            >
-              Back to Dashboard
-            </Button>
             <div className="relative">
               <Input
                 type="text"
@@ -241,6 +239,13 @@ const MarketData = () => {
                 <Search className="h-4 w-4 text-white" />
               </Button>
             </div>
+            <Button
+              variant="outline"
+              onClick={() => navigate('/dashboard')}
+              className="border-teal-500 text-teal-400 hover:bg-gray-700 hover:text-teal-300 ml-2"
+            >
+              Back to Dashboard
+            </Button>
           </div>
         </div>
 

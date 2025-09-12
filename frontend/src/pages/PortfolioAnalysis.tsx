@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useSettingsStore } from '../store/store';
 import { Line, Bar, Pie, Doughnut } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -39,19 +40,13 @@ ChartJS.register(
 const PortfolioAnalysis = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
-  const [darkMode, setDarkMode] = useState(true);
+  const { settings } = useSettingsStore();
+  const darkMode = settings.darkMode;
   const [timeRange, setTimeRange] = useState("1m"); // 1d, 1w, 1m, 3m, 1y, all
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [portfolioData, setPortfolioData] = useState<any>(null);
 
-  // Get the dark mode state from localStorage if available
-  useEffect(() => {
-    const storedDarkMode = localStorage.getItem("darkMode");
-    if (storedDarkMode !== null) {
-      setDarkMode(storedDarkMode === "true");
-    }
-  }, []);
 
   // Load portfolio data when timeRange changes
   useEffect(() => {
@@ -406,8 +401,8 @@ const PortfolioAnalysis = () => {
 
   if (!currentUser) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <Card className="w-full max-w-md bg-gray-900 text-white">
+      <div className={`min-h-screen ${darkMode ? "bg-black" : "bg-gray-100"} flex items-center justify-center`}>
+        <Card className={`w-full max-w-md ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}>
           <CardHeader>
             <CardTitle>Authentication Required</CardTitle>
             <CardDescription className="text-gray-400">
@@ -417,7 +412,11 @@ const PortfolioAnalysis = () => {
           <CardContent>
             <Button 
               onClick={() => navigate('/login')}
-              className="w-full bg-gradient-to-r from-teal-500 to-cyan-600"
+              className={`w-full bg-gradient-to-r ${
+                darkMode 
+                  ? "from-[#CCD5FF] to-[#B8C5FF] hover:from-[#B8C5FF] hover:to-[#A3B2FF]"  // Light lavender blue gradient for dark mode
+                  : "from-[#4169E1] to-[#2E4BC6] hover:from-[#2E4BC6] hover:to-[#1E3A8A]"  // Royal blue gradient for light mode
+              }`}
             >
               Go to Login
             </Button>
@@ -433,7 +432,11 @@ const PortfolioAnalysis = () => {
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-teal-400 to-cyan-500 bg-clip-text text-transparent">
+            <h1 className={`text-3xl font-bold bg-gradient-to-r bg-clip-text text-transparent ${
+              darkMode 
+                ? "from-[#CCD5FF] to-[#B8C5FF]"  // Light lavender blue gradient for dark mode
+                : "from-[#4169E1] to-[#2E4BC6]"  // Royal blue gradient for light mode
+            }`}>
               Portfolio Analysis
             </h1>
             <p className="text-white">
@@ -560,7 +563,7 @@ const PortfolioAnalysis = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <Card className={`${cardClasses} hover:shadow-lg transition-shadow duration-300`}>
                 <CardHeader>
-                  <CardTitle className="text-white flex items-center gap-2">
+                  <CardTitle className={`${darkMode ? "text-white" : "text-[#4169E1]"} flex items-center gap-2`}>
                     <div className="w-2 h-2 bg-teal-400 rounded-full"></div>
                     Asset Allocation
                   </CardTitle>
@@ -594,7 +597,7 @@ const PortfolioAnalysis = () => {
               
               <Card className={`${cardClasses} hover:shadow-lg transition-shadow duration-300`}>
                 <CardHeader>
-                  <CardTitle className="text-white flex items-center gap-2">
+                  <CardTitle className={`${darkMode ? "text-white" : "text-[#4169E1]"} flex items-center gap-2`}>
                     <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
                     Monthly Returns
                   </CardTitle>
@@ -629,18 +632,18 @@ const PortfolioAnalysis = () => {
             {/* Detailed Analysis Tabs */}
             <Card className={cardClasses}>
               <CardHeader>
-                <CardTitle className="text-white">Detailed Analysis</CardTitle>
+                <CardTitle className={darkMode ? "text-white" : "text-[#4169E1]"}>Detailed Analysis</CardTitle>
               </CardHeader>
               <CardContent>
                 <Tabs defaultValue="performance" className="w-full">
                   <TabsList className="bg-gray-700 border-gray-600 mb-6">
-                    <TabsTrigger value="performance" className="text-white data-[state=active]:bg-teal-600">
+                    <TabsTrigger value="performance" className="text-white data-[state=active]:bg-pink-600">
                       Performance
                     </TabsTrigger>
-                    <TabsTrigger value="risk" className="text-white data-[state=active]:bg-teal-600">
+                    <TabsTrigger value="risk" className="text-white data-[state=active]:bg-pink-600">
                       Risk
                     </TabsTrigger>
-                    <TabsTrigger value="holdings" className="text-white data-[state=active]:bg-teal-600">
+                    <TabsTrigger value="holdings" className="text-white data-[state=active]:bg-pink-600">
                       Holdings
                     </TabsTrigger>
                   </TabsList>
@@ -781,7 +784,11 @@ const PortfolioAnalysis = () => {
             <p className="text-gray-400 mb-4">No portfolio data available</p>
             <Button 
               onClick={loadPortfolioData}
-              className="bg-gradient-to-r from-teal-500 to-cyan-600"
+              className={`bg-gradient-to-r ${
+                darkMode 
+                  ? "from-[#CCD5FF] to-[#B8C5FF] hover:from-[#B8C5FF] hover:to-[#A3B2FF]"  // Light lavender blue gradient for dark mode
+                  : "from-[#4169E1] to-[#2E4BC6] hover:from-[#2E4BC6] hover:to-[#1E3A8A]"  // Royal blue gradient for light mode
+              }`}
             >
               Load Data
             </Button>

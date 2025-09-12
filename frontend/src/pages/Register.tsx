@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiAlertTriangle } from 'react-icons/fi';
 import { auth } from '../lib/firebase';
+import { useSettingsStore } from '../store/store';
 
 // UI Components
 import { Button } from '@/components/ui/button';
@@ -26,6 +27,8 @@ export const Register = () => {
   const [authStatus, setAuthStatus] = useState('');
   const { signup, updateUserProfile } = useAuth();
   const navigate = useNavigate();
+  const { settings } = useSettingsStore();
+  const darkMode = settings.darkMode;
 
   // Check if Firebase Auth is initialized
   useEffect(() => {
@@ -89,13 +92,17 @@ export const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-gray-900 text-white border-gray-800">
+    <div className={`min-h-screen ${darkMode ? "bg-black" : "bg-gray-100"} flex items-center justify-center p-4`}>
+      <Card className={`w-full max-w-md ${darkMode ? "bg-gray-900 text-white border-gray-800" : "bg-white text-gray-900 border-gray-200"}`}>
         <CardHeader className="space-y-1 flex flex-col items-center">
           <div className="w-16 h-16 mb-2">
             <img src={WhaleIcon} alt="CryptoWhale Logo" className="w-full h-full" />
           </div>
-          <CardTitle className="text-2xl text-center bg-gradient-to-r from-teal-400 to-cyan-500 bg-clip-text text-transparent">
+          <CardTitle className={`text-2xl text-center bg-gradient-to-r bg-clip-text text-transparent ${
+            darkMode 
+              ? "from-[#CCD5FF] to-[#B8C5FF]"  // Light lavender blue gradient for dark mode
+              : "from-[#4169E1] to-[#2E4BC6]"  // Royal blue gradient for light mode
+          }`}>
             CryptoWhale
           </CardTitle>
           <CardDescription className="text-gray-400 text-center">
@@ -171,7 +178,11 @@ export const Register = () => {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700"
+              className={`w-full bg-gradient-to-r ${
+                darkMode 
+                  ? "from-[#CCD5FF] to-[#B8C5FF] hover:from-[#B8C5FF] hover:to-[#A3B2FF]"  // Light lavender blue gradient for dark mode
+                  : "from-[#4169E1] to-[#2E4BC6] hover:from-[#2E4BC6] hover:to-[#1E3A8A]"  // Royal blue gradient for light mode
+              }`}
             >
               {loading ? 'Creating Account...' : 'Create Account'}
             </Button>
@@ -181,7 +192,7 @@ export const Register = () => {
         <CardFooter className="flex flex-col space-y-4">
           <div className="text-center text-sm text-gray-400">
             Already have an account?{' '}
-            <Link to="/login" className="text-cyan-500 hover:text-cyan-400">
+            <Link to="/login" className="text-pink-500 hover:text-pink-400">
               Sign in
             </Link>
           </div>

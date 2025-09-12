@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { FirebaseError } from 'firebase/app';
 import { FiAlertTriangle } from 'react-icons/fi';
+import { useSettingsStore } from '../store/store';
 
 // UI Components
 import { Button } from '@/components/ui/button';
@@ -24,6 +25,8 @@ export const Login = () => {
   const [activeTab, setActiveTab] = useState('login');
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { settings } = useSettingsStore();
+  const darkMode = settings.darkMode;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,7 +95,7 @@ export const Login = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4">
+    <div className={`min-h-screen ${darkMode ? "bg-black" : "bg-gray-100"} flex items-center justify-center p-4`}>
       <Tabs 
         defaultValue="login" 
         value={activeTab} 
@@ -100,21 +103,33 @@ export const Login = () => {
         className="w-full max-w-6xl"
       >
         <TabsList className="grid grid-cols-2 max-w-md mx-auto mb-6 bg-gray-800">
-          <TabsTrigger value="login" className="text-white data-[state=active]:bg-gradient-to-r data-[state=active]:from-teal-500 data-[state=active]:to-cyan-600">
+          <TabsTrigger value="login" className={`text-white data-[state=active]:bg-gradient-to-r ${
+            darkMode 
+              ? "data-[state=active]:from-[#CCD5FF] data-[state=active]:to-[#B8C5FF]"  // Light lavender blue gradient for dark mode
+              : "data-[state=active]:from-[#4169E1] data-[state=active]:to-[#2E4BC6]"  // Royal blue gradient for light mode
+          }`}>
             Sign In
           </TabsTrigger>
-          <TabsTrigger value="preview" className="text-white data-[state=active]:bg-gradient-to-r data-[state=active]:from-teal-500 data-[state=active]:to-cyan-600">
+          <TabsTrigger value="preview" className={`text-white data-[state=active]:bg-gradient-to-r ${
+            darkMode 
+              ? "data-[state=active]:from-[#CCD5FF] data-[state=active]:to-[#B8C5FF]"  // Light lavender blue gradient for dark mode
+              : "data-[state=active]:from-[#4169E1] data-[state=active]:to-[#2E4BC6]"  // Royal blue gradient for light mode
+          }`}>
             Dashboard Preview
           </TabsTrigger>
         </TabsList>
         
         <TabsContent value="login">
-          <Card className="w-full max-w-md mx-auto bg-gray-900 text-white border-gray-800">
+          <Card className={`w-full max-w-md mx-auto ${darkMode ? "bg-gray-900 text-white border-gray-800" : "bg-white text-gray-900 border-gray-200"}`}>
             <CardHeader className="space-y-1 flex flex-col items-center">
               <div className="w-16 h-16 mb-2">
                 <img src={WhaleIcon} alt="CryptoWhale Logo" className="w-full h-full" />
               </div>
-              <CardTitle className="text-2xl text-center bg-gradient-to-r from-teal-400 to-cyan-500 bg-clip-text text-transparent">
+              <CardTitle className={`text-2xl text-center bg-gradient-to-r bg-clip-text text-transparent ${
+                darkMode 
+                  ? "from-[#CCD5FF] to-[#B8C5FF]"  // Light lavender blue gradient for dark mode
+                  : "from-[#4169E1] to-[#2E4BC6]"  // Royal blue gradient for light mode
+              }`}>
                 CryptoWhale
               </CardTitle>
               <CardDescription className="text-gray-400 text-center">
@@ -158,7 +173,7 @@ export const Login = () => {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <Label htmlFor="password" className="text-gray-300">Password</Label>
-                    <Link to="/forgot-password" className="text-sm text-cyan-500 hover:text-cyan-400">
+                    <Link to="/forgot-password" className="text-sm text-pink-500 hover:text-pink-400">
                       Forgot password?
                     </Link>
                   </div>
@@ -175,14 +190,18 @@ export const Login = () => {
                   <input
                     type="checkbox"
                     id="remember"
-                    className="rounded bg-gray-800 border-gray-700 text-cyan-500"
+                    className="rounded bg-gray-800 border-gray-700 text-pink-500"
                   />
                   <Label htmlFor="remember" className="text-sm text-gray-300">Remember me</Label>
                 </div>
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700"
+                  className={`w-full bg-gradient-to-r ${
+                    darkMode 
+                      ? "from-[#CCD5FF] to-[#B8C5FF] hover:from-[#B8C5FF] hover:to-[#A3B2FF]"  // Light lavender blue gradient for dark mode
+                      : "from-[#4169E1] to-[#2E4BC6] hover:from-[#2E4BC6] hover:to-[#1E3A8A]"  // Royal blue gradient for light mode
+                  }`}
                 >
                   {loading ? 'Signing in...' : 'Sign in'}
                 </Button>
@@ -201,7 +220,7 @@ export const Login = () => {
             <CardFooter className="flex flex-col space-y-4">
               <div className="text-center text-sm text-gray-400">
                 Don't have an account?{' '}
-                <Link to="/register" className="text-cyan-500 hover:text-cyan-400">
+                <Link to="/register" className="text-pink-500 hover:text-pink-400">
                   Sign up
                 </Link>
               </div>
@@ -214,18 +233,26 @@ export const Login = () => {
         </TabsContent>
         
         <TabsContent value="preview">
-          <div className="w-full max-w-6xl mx-auto bg-gray-900 text-white border border-gray-800 rounded-lg overflow-hidden">
-            <div className="p-6 bg-gradient-to-r from-gray-800 to-gray-900">
+          <div className={`w-full max-w-6xl mx-auto ${darkMode ? "bg-gray-900 text-white border-gray-800" : "bg-white text-gray-900 border-gray-200"} border rounded-lg overflow-hidden`}>
+            <div className={`p-6 ${darkMode ? "bg-gradient-to-r from-gray-800 to-gray-900" : "bg-gradient-to-r from-gray-100 to-gray-200"}`}>
               <div className="flex justify-between items-center mb-6">
                 <div>
-                  <h1 className="text-3xl font-bold bg-gradient-to-r from-teal-400 to-cyan-500 bg-clip-text text-transparent">
+                  <h1 className={`text-3xl font-bold bg-gradient-to-r bg-clip-text text-transparent ${
+                    darkMode 
+                      ? "from-[#CCD5FF] to-[#B8C5FF]"  // Light lavender blue gradient for dark mode
+                      : "from-[#4169E1] to-[#2E4BC6]"  // Royal blue gradient for light mode
+                  }`}>
                     CryptoWhale Dashboard
                   </h1>
                   <p className="text-gray-400">Welcome to your crypto analytics platform</p>
                 </div>
                 <Button 
                   onClick={handleViewDashboard}
-                  className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700"
+                  className={`bg-gradient-to-r ${
+                    darkMode 
+                      ? "from-[#CCD5FF] to-[#B8C5FF] hover:from-[#B8C5FF] hover:to-[#A3B2FF]"  // Light lavender blue gradient for dark mode
+                      : "from-[#4169E1] to-[#2E4BC6] hover:from-[#2E4BC6] hover:to-[#1E3A8A]"  // Royal blue gradient for light mode
+                  }`}
                 >
                   Go to Dashboard
                 </Button>

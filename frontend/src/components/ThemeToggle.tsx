@@ -1,21 +1,15 @@
 import React from 'react';
-import { useSettingsStore } from '@/store/store';
+import { useTheme } from '@/hooks/useTheme';
 
 const ThemeToggle: React.FC = () => {
-  const { settings, updateSettings } = useSettingsStore();
-
-  const toggleTheme = () => {
-    const newDarkMode = !settings.darkMode;
-    updateSettings({ darkMode: newDarkMode });
-    document.documentElement.classList.toggle('dark', newDarkMode);
-  };
+  const { darkMode, toggleTheme } = useTheme();
 
   return (
     <button 
       className="theme-toggle" 
       onClick={toggleTheme}
       title="Toggles light & dark" 
-      aria-label={settings.darkMode ? "dark" : "light"} 
+      aria-label={darkMode ? "dark" : "light"} 
       aria-live="polite"
     >
       <svg className="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">

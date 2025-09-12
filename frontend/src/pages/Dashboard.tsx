@@ -8,13 +8,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Wallet, ArrowRightLeft, BarChart3, LineChart, Settings, LogOut, PieChart, DollarSign, Briefcase, Plus } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
+import ModularColorPicker from "@/components/ModularColorPicker";
 import { useSettingsStore } from "@/store/store";
+import { initializeModularTheme } from "@/lib/modularColors";
 
 const Dashboard = () => {
   const { currentUser, userProfile, logout, updateUserProfile } = useAuth();
   const { settings } = useSettingsStore();
   const [loading, setLoading] = useState(true);
   const [hoveredCrypto, setHoveredCrypto] = useState(null);
+  const [hoveredPricePoint, setHoveredPricePoint] = useState(null);
   const [displayName, setDisplayName] = useState('');
   const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
@@ -47,6 +50,9 @@ const Dashboard = () => {
       navigate('/login');
       return;
     }
+    
+    // Initialize modular color theme
+    initializeModularTheme();
     
     // Simulate loading data
     const timer = setTimeout(() => {
@@ -95,8 +101,8 @@ const Dashboard = () => {
 
   if (!currentUser) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <Card className="w-full max-w-md bg-gray-900 text-white">
+      <div className={`min-h-screen ${darkMode ? "bg-black" : "bg-gray-100"} flex items-center justify-center`}>
+        <Card className={`w-full max-w-md ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}>
           <CardHeader>
             <CardTitle>Authentication Required</CardTitle>
             <CardDescription className="text-gray-400">
@@ -106,7 +112,7 @@ const Dashboard = () => {
           <CardContent>
             <Button 
               onClick={() => navigate('/login')}
-              className="w-full bg-gradient-to-r from-teal-500 to-cyan-600"
+              className="w-full bg-gradient-to-r from-[var(--button-gradient-from)] to-[var(--button-gradient-to)]"
             >
               Go to Login
             </Button>
@@ -125,7 +131,9 @@ const Dashboard = () => {
     ? "bg-gray-800 border-gray-700" 
     : "bg-white border-gray-200";
   
-  const textHighlightClass = "text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-500";
+  const textHighlightClass = darkMode 
+    ? "text-transparent bg-clip-text bg-gradient-to-r from-[#CCD5FF] to-[#B8C5FF]"  // Light lavender blue gradient for dark mode
+    : "text-transparent bg-clip-text bg-gradient-to-r from-[#4169E1] to-[#2E4BC6]"; // Royal blue gradient for light mode
   
   // Text color classes for regular text
   const regularTextClass = darkMode ? "text-white" : "text-gray-900";
@@ -138,7 +146,11 @@ const Dashboard = () => {
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-teal-400 to-cyan-500 bg-clip-text text-transparent">
+            <h1 className={`text-3xl font-bold bg-gradient-to-r bg-clip-text text-transparent ${
+              darkMode 
+                ? "from-[#CCD5FF] to-[#B8C5FF]"  // Light lavender blue gradient for dark mode
+                : "from-[#4169E1] to-[#2E4BC6]"  // Royal blue gradient for light mode
+            }`}>
               CryptoWhale Dashboard
             </h1>
             <p className={darkMode ? "text-gray-400" : "text-gray-600"}>
@@ -151,7 +163,7 @@ const Dashboard = () => {
               onClick={handleLogout}
               variant="outline" 
               className={darkMode 
-                ? "border-teal-500 hover:bg-gray-800 hover:text-teal-300 text-teal-400" 
+                ? "border-lime-500 hover:bg-gray-800 hover:text-lime-300 text-lime-400" 
                 : "border-gray-300 hover:bg-gray-200"
               }
             >
@@ -223,7 +235,11 @@ const Dashboard = () => {
                 <CardContent>
                   <div className="grid grid-cols-2 gap-4">
                     <Button 
-                      className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white flex items-center"
+                      className={`bg-gradient-to-r text-white flex items-center ${
+                        darkMode 
+                          ? "from-[#CCD5FF] to-[#B8C5FF] hover:from-[#B8C5FF] hover:to-[#A3B2FF]"  // Light lavender blue gradient for dark mode
+                          : "from-[#4169E1] to-[#2E4BC6] hover:from-[#2E4BC6] hover:to-[#1E3A8A]"  // Royal blue gradient for light mode
+                      }`}
                       onClick={() => navigate('/wallet-connection')}
                     >
                       <Wallet className="h-4 w-4 mr-2" />
@@ -232,7 +248,7 @@ const Dashboard = () => {
                     <Button 
                       variant="outline" 
                       className={darkMode 
-                        ? "border-teal-500 hover:bg-gray-800 hover:text-teal-300 text-teal-400 flex items-center" 
+                        ? "border-lime-500 hover:bg-gray-800 hover:text-lime-300 text-lime-400 flex items-center" 
                         : "border-gray-300 hover:bg-gray-200 flex items-center"
                       }
                       onClick={() => navigate('/transaction-log')}
@@ -243,7 +259,7 @@ const Dashboard = () => {
                     <Button 
                       variant="outline" 
                       className={darkMode 
-                        ? "border-teal-500 hover:bg-gray-800 hover:text-teal-300 text-teal-400 flex items-center" 
+                        ? "border-lime-500 hover:bg-gray-800 hover:text-lime-300 text-lime-400 flex items-center" 
                         : "border-gray-300 hover:bg-gray-200 flex items-center"
                       }
                       onClick={() => navigate('/portfolio-analysis')}
@@ -254,7 +270,7 @@ const Dashboard = () => {
                     <Button 
                       variant="outline" 
                       className={darkMode 
-                        ? "border-teal-500 hover:bg-gray-800 hover:text-teal-300 text-teal-400 flex items-center" 
+                        ? "border-lime-500 hover:bg-gray-800 hover:text-lime-300 text-lime-400 flex items-center" 
                         : "border-gray-300 hover:bg-gray-200 flex items-center"
                       }
                       onClick={() => navigate('/market-data')}
@@ -279,14 +295,14 @@ const Dashboard = () => {
                 </CardHeader>
                 <CardContent>
                   {loading ? (
-                    <div className="h-64 flex items-center justify-center">
-                      <Skeleton className={`h-48 w-48 rounded-full ${darkMode ? "bg-gray-700" : "bg-gray-200"}`} />
+                    <div className="h-72 flex items-center justify-center">
+                      <Skeleton className={`h-52 w-52 rounded-full ${darkMode ? "bg-gray-700" : "bg-gray-200"}`} />
                     </div>
                   ) : (
-                    <div className="h-64 relative">
+                    <div className="h-72 relative pt-2">
                       {/* Modern 3D Pie Chart - Optimized for performance */}
                       <svg 
-                        viewBox="0 0 100 100" 
+                        viewBox="0 0 140 140" 
                         className="w-full h-full"
                         style={{ overflow: 'visible' }}
                       >
@@ -324,7 +340,7 @@ const Dashboard = () => {
                         </defs>
                         
                         {/* Chart segments with 3D effect - Fixed positioning */}
-                        <g transform="translate(50, 50)">
+                        <g transform="translate(70, 55)">
                           {portfolioData.map((item, index) => {
                             // Calculate the pie segments
                             const previousTotal = portfolioData
@@ -339,8 +355,8 @@ const Dashboard = () => {
                             const endRad = (endAngle - 90) * Math.PI / 180;
                             
                             // Calculate points on the circle - Fixed dimensions
-                            const innerRadius = 15; // Fixed inner radius
-                            const outerRadius = 40; // Fixed outer radius
+                            const innerRadius = 28; // Increased inner radius for larger donut hole
+                            const outerRadius = 58; // Further increased outer radius
                             
                             const startOuterX = outerRadius * Math.cos(startRad);
                             const startOuterY = outerRadius * Math.sin(startRad);
@@ -388,7 +404,7 @@ const Dashboard = () => {
                           <circle 
                             cx="0" 
                             cy="0" 
-                            r="15" 
+                            r="28" 
                             fill={darkMode ? "#1f2937" : "#f9fafb"} 
                             stroke={darkMode ? "#374151" : "#e5e7eb"} 
                             strokeWidth="0.5"
@@ -400,7 +416,11 @@ const Dashboard = () => {
                       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                         {hoveredCrypto && (
                           <div 
-                            className="bg-gradient-to-r from-teal-500 to-cyan-600 text-white px-4 py-2 rounded-lg shadow-lg z-10"
+                            className={`bg-gradient-to-r text-white px-4 py-2 rounded-lg shadow-lg z-10 ${
+                              darkMode 
+                                ? "from-[#CCD5FF] to-[#B8C5FF]"  // Light lavender blue gradient for dark mode
+                                : "from-[#4169E1] to-[#2E4BC6]"  // Royal blue gradient for light mode
+                            }`}
                             style={{ minWidth: '150px', textAlign: 'center' }}
                           >
                             {(() => {
@@ -458,10 +478,10 @@ const Dashboard = () => {
                 <CardContent>
                   {loading ? (
                     <div className="space-y-2">
-                      <Skeleton className={`h-48 w-full ${darkMode ? "bg-gray-700" : "bg-gray-200"}`} />
+                      <Skeleton className={`h-56 w-full ${darkMode ? "bg-gray-700" : "bg-gray-200"}`} />
                     </div>
                   ) : (
-                    <div className="h-64 relative">
+                    <div className="h-72 relative pb-4">
                       {/* Simple SVG Line Chart */}
                       <svg viewBox="0 0 100 50" className="w-full h-full" preserveAspectRatio="none">
                         {/* Chart background grid */}
@@ -513,8 +533,8 @@ const Dashboard = () => {
                         {/* Gradient definition */}
                         <defs>
                           <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stopColor="#0ea5e9" />
-                            <stop offset="100%" stopColor="#14b8a6" />
+                            <stop offset="0%" stopColor={darkMode ? "#CCD5FF" : "#4169E1"} />
+                            <stop offset="100%" stopColor={darkMode ? "#B8C5FF" : "#2E4BC6"} />
                           </linearGradient>
                         </defs>
 
@@ -543,34 +563,71 @@ const Dashboard = () => {
 
                         <defs>
                           <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stopColor="#14b8a6" stopOpacity="0.8" />
-                            <stop offset="100%" stopColor="#14b8a6" stopOpacity="0.1" />
+                            <stop offset="0%" stopColor={darkMode ? "#CCD5FF" : "#4169E1"} stopOpacity="0.8" />
+                            <stop offset="100%" stopColor={darkMode ? "#CCD5FF" : "#4169E1"} stopOpacity="0.1" />
                           </linearGradient>
                         </defs>
 
-                        {/* Data points */}
+                        {/* Interactive data points */}
                         {priceHistoryData.map((dataPoint, index) => {
-                          // Normalize price between min and max for the chart
                           const prices = priceHistoryData.map(d => d.price);
                           const minPrice = Math.min(...prices) * 0.99;
                           const maxPrice = Math.max(...prices) * 1.01;
                           const range = maxPrice - minPrice;
                           
-                          // Calculate position
                           const x = (index / (priceHistoryData.length - 1)) * 100;
                           const y = 50 - ((dataPoint.price - minPrice) / range) * 50;
+                          const isHovered = hoveredPricePoint === index;
                           
                           return (
-                            <circle 
-                              key={index}
-                              cx={x} 
-                              cy={y} 
-                              r="1" 
-                              fill="#14b8a6" 
-                            />
+                            <g key={`point-${index}`}>
+                              {/* Invisible larger circle for easier hovering */}
+                              <circle
+                                cx={x}
+                                cy={y}
+                                r="8"
+                                fill="transparent"
+                                className="cursor-pointer"
+                                onMouseEnter={() => setHoveredPricePoint(index)}
+                                onMouseLeave={() => setHoveredPricePoint(null)}
+                              />
+                              {/* Visible data point */}
+                              <circle
+                                cx={x}
+                                cy={y}
+                                r={isHovered ? "4" : "2"}
+                                fill={isHovered ? (darkMode ? "#CCD5FF" : "#4169E1") : (darkMode ? "#B8C5FF" : "#2E4BC6")}
+                                stroke={isHovered ? "#ffffff" : "transparent"}
+                                strokeWidth={isHovered ? "2" : "0"}
+                                className="transition-all duration-200"
+                              />
+                            </g>
                           );
                         })}
+
                       </svg>
+
+                      {/* Hover tooltip */}
+                      {hoveredPricePoint !== null && (
+                        <div 
+                          className="absolute bg-gray-900 text-white px-3 py-2 rounded-lg shadow-lg text-sm pointer-events-none z-10"
+                          style={{
+                            left: `${(hoveredPricePoint / (priceHistoryData.length - 1)) * 100}%`,
+                            top: '10px',
+                            transform: 'translateX(-50%)'
+                          }}
+                        >
+                          <div className="font-semibold">
+                            ${priceHistoryData[hoveredPricePoint].price.toLocaleString()}
+                          </div>
+                          <div className="text-gray-300 text-xs">
+                            {new Date(priceHistoryData[hoveredPricePoint].date).toLocaleDateString('en-US', { 
+                              month: 'short', 
+                              day: 'numeric' 
+                            })}
+                          </div>
+                        </div>
+                      )}
 
                       {/* X-axis labels */}
                       <div className="flex justify-between mt-2 text-xs">
@@ -589,7 +646,11 @@ const Dashboard = () => {
                       </div>
 
                       {/* Current price */}
-                      <div className="absolute top-2 right-2 bg-gradient-to-r from-teal-500 to-cyan-600 text-white px-2 py-1 rounded text-sm font-bold">
+                      <div className={`absolute top-2 right-2 bg-gradient-to-r text-white px-2 py-1 rounded text-sm font-bold ${
+                        darkMode 
+                          ? "from-[#CCD5FF] to-[#B8C5FF]"  // Light lavender blue gradient for dark mode
+                          : "from-[#4169E1] to-[#2E4BC6]"  // Royal blue gradient for light mode
+                      }`}>
                         ${priceHistoryData[priceHistoryData.length - 1].price.toLocaleString()}
                       </div>
                     </div>
@@ -650,11 +711,19 @@ const Dashboard = () => {
                         </span>
                       </div>
                     </div>
+                    
+                    <div className="mt-6">
+                      <ModularColorPicker />
+                    </div>
                     <div className="pt-4">
                       <Button 
                         onClick={handleSaveProfile}
                         disabled={saving}
-                        className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 disabled:opacity-50"
+                        className={`bg-gradient-to-r disabled:opacity-50 ${
+                          darkMode 
+                            ? "from-[#CCD5FF] to-[#B8C5FF] hover:from-[#B8C5FF] hover:to-[#A3B2FF]"  // Light lavender blue gradient for dark mode
+                            : "from-[#4169E1] to-[#2E4BC6] hover:from-[#2E4BC6] hover:to-[#1E3A8A]"  // Royal blue gradient for light mode
+                        }`}
                       >
                         {saving ? "Saving..." : "Save Changes"}
                       </Button>

@@ -9,6 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { WalletCard, WalletData } from "@/components/wallet/WalletCard";
 import { AddWalletModal } from "@/components/wallet/AddWalletModal";
 import { ChainType, WalletType } from "@/components/wallet/WalletIcons";
+import { useSettingsStore } from '../store/store';
 
 // Mock wallet data
 const mockWallets: WalletData[] = [
@@ -112,6 +113,8 @@ const mockExchanges = [
 const WalletConnection = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
+  const { settings } = useSettingsStore();
+  const darkMode = settings.darkMode;
   const [activeTab, setActiveTab] = useState("wallets");
   const [walletDialogOpen, setWalletDialogOpen] = useState(false);
   const [exchangeDialogOpen, setExchangeDialogOpen] = useState(false);
@@ -221,17 +224,21 @@ const WalletConnection = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-4 md:p-8">
+    <div className={`min-h-screen ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"} p-4 md:p-8`}>
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-teal-400 to-cyan-500 bg-clip-text text-transparent mb-4 md:mb-0">
+          <h1 className={`text-2xl md:text-3xl font-bold bg-gradient-to-r bg-clip-text text-transparent mb-4 md:mb-0 ${
+            darkMode 
+              ? "from-[#CCD5FF] to-[#B8C5FF]"  // Light lavender blue gradient for dark mode
+              : "from-[#4169E1] to-[#2E4BC6]"  // Royal blue gradient for light mode
+          }`}>
             Wallet & Exchange Connections
           </h1>
           <div className="flex flex-wrap gap-2">
             <Button
               onClick={() => navigate('/dashboard')}
               variant="outline"
-              className="border-teal-500 text-teal-500 hover:bg-teal-950"
+              className="border-pink-500 text-pink-500 hover:bg-pink-950"
             >
               Back to Dashboard
             </Button>
@@ -309,7 +316,7 @@ const WalletConnection = () => {
               </div>
               <Button
                 onClick={() => setWalletDialogOpen(true)}
-                className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700"
+                className={`bg-gradient-to-r ${darkMode ? "from-[#CCD5FF] to-[#B8C5FF] hover:from-[#B8C5FF] hover:to-[#A3B2FF]" : "from-[#4169E1] to-[#2E4BC6] hover:from-[#2E4BC6] hover:to-[#1E3A8A]"}`}
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Wallet
@@ -378,7 +385,7 @@ const WalletConnection = () => {
                   </p>
                   <Button
                     onClick={() => setWalletDialogOpen(true)}
-                    className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700"
+                    className={`bg-gradient-to-r ${darkMode ? "from-[#CCD5FF] to-[#B8C5FF] hover:from-[#B8C5FF] hover:to-[#A3B2FF]" : "from-[#4169E1] to-[#2E4BC6] hover:from-[#2E4BC6] hover:to-[#1E3A8A]"}`}
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Add Your First Wallet
@@ -399,7 +406,7 @@ const WalletConnection = () => {
               </div>
               <Button
                 onClick={() => setExchangeDialogOpen(true)}
-                className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700"
+                className={`bg-gradient-to-r ${darkMode ? "from-[#CCD5FF] to-[#B8C5FF] hover:from-[#B8C5FF] hover:to-[#A3B2FF]" : "from-[#4169E1] to-[#2E4BC6] hover:from-[#2E4BC6] hover:to-[#1E3A8A]"}`}
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Exchange
@@ -496,7 +503,7 @@ const WalletConnection = () => {
                   </p>
                   <Button
                     onClick={() => setExchangeDialogOpen(true)}
-                    className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700"
+                    className={`bg-gradient-to-r ${darkMode ? "from-[#CCD5FF] to-[#B8C5FF] hover:from-[#B8C5FF] hover:to-[#A3B2FF]" : "from-[#4169E1] to-[#2E4BC6] hover:from-[#2E4BC6] hover:to-[#1E3A8A]"}`}
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Add Your First Exchange
@@ -517,7 +524,7 @@ const WalletConnection = () => {
               </div>
               <Button
                 onClick={() => setExchangeDialogOpen(true)}
-                className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700"
+                className={`bg-gradient-to-r ${darkMode ? "from-[#CCD5FF] to-[#B8C5FF] hover:from-[#B8C5FF] hover:to-[#A3B2FF]" : "from-[#4169E1] to-[#2E4BC6] hover:from-[#2E4BC6] hover:to-[#1E3A8A]"}`}
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Brokerage
@@ -556,7 +563,7 @@ const WalletConnection = () => {
                     </div>
                   </div>
                   <Button
-                    className="w-full mt-6 bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700"
+                    className={`w-full mt-6 bg-gradient-to-r ${darkMode ? "from-[#CCD5FF] to-[#B8C5FF] hover:from-[#B8C5FF] hover:to-[#A3B2FF]" : "from-[#4169E1] to-[#2E4BC6] hover:from-[#2E4BC6] hover:to-[#1E3A8A]"}`}
                     onClick={() => {
                       setSuccess("TD Ameritrade connection initiated. Redirecting to authorization page...");
                       setTimeout(() => setSuccess(null), 3000);
@@ -595,7 +602,7 @@ const WalletConnection = () => {
                     </div>
                   </div>
                   <Button
-                    className="w-full mt-6 bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700"
+                    className={`w-full mt-6 bg-gradient-to-r ${darkMode ? "from-[#CCD5FF] to-[#B8C5FF] hover:from-[#B8C5FF] hover:to-[#A3B2FF]" : "from-[#4169E1] to-[#2E4BC6] hover:from-[#2E4BC6] hover:to-[#1E3A8A]"}`}
                     onClick={() => {
                       setSuccess("E*Trade connection initiated. Redirecting to authorization page...");
                       setTimeout(() => setSuccess(null), 3000);
@@ -635,7 +642,7 @@ const WalletConnection = () => {
                     </div>
                   </div>
                   <Button
-                    className="w-full mt-6 bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700"
+                    className={`w-full mt-6 bg-gradient-to-r ${darkMode ? "from-[#CCD5FF] to-[#B8C5FF] hover:from-[#B8C5FF] hover:to-[#A3B2FF]" : "from-[#4169E1] to-[#2E4BC6] hover:from-[#2E4BC6] hover:to-[#1E3A8A]"}`}
                     onClick={() => {
                       setSuccess("Brokerage selection menu opening...");
                       setTimeout(() => setSuccess(null), 3000);
