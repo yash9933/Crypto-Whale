@@ -89,6 +89,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         try {
           const result = await mockSignIn(email, password);
           console.log('Mock login successful for:', email);
+          
+          // Update the current user state after successful login
+          const mockUser = getCurrentUser();
+          setCurrentUser(mockUser as any);
+          if (mockUser) {
+            setUserProfile({
+              uid: mockUser.uid,
+              email: mockUser.email,
+              displayName: mockUser.displayName
+            });
+          }
+          
           return result;
         } catch (mockError: any) {
           console.error('Mock login error:', mockError.message);
@@ -103,6 +115,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             try {
               const signupResult = await mockSignUp(email, password);
               console.log('Auto-created user in mock system:', email);
+              
+              // Update the current user state after successful auto-creation
+              const mockUser = getCurrentUser();
+              setCurrentUser(mockUser as any);
+              if (mockUser) {
+                setUserProfile({
+                  uid: mockUser.uid,
+                  email: mockUser.email,
+                  displayName: mockUser.displayName
+                });
+              }
+              
               return signupResult;
             } catch (createError) {
               console.error('Error auto-creating user in mock system:', createError);
@@ -124,6 +148,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.log('Firebase auth failed, falling back to mock auth');
         try {
           const result = await mockSignIn(email, password);
+          
+          // Update the current user state after successful fallback login
+          const mockUser = getCurrentUser();
+          setCurrentUser(mockUser as any);
+          if (mockUser) {
+            setUserProfile({
+              uid: mockUser.uid,
+              email: mockUser.email,
+              displayName: mockUser.displayName
+            });
+          }
+          
           return result;
         } catch (mockError: any) {
           // If the user doesn't exist in mock system but it's the test user or the user's email (including variations),
@@ -135,6 +171,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             console.log('User not found in mock system, creating automatically:', email);
             const signupResult = await mockSignUp(email, password);
             console.log('Auto-created user in mock system:', email);
+            
+            // Update the current user state after successful fallback auto-creation
+            const mockUser = getCurrentUser();
+            setCurrentUser(mockUser as any);
+            if (mockUser) {
+              setUserProfile({
+                uid: mockUser.uid,
+                email: mockUser.email,
+                displayName: mockUser.displayName
+              });
+            }
+            
             return signupResult;
           } else {
             throw mockError;

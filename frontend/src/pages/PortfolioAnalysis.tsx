@@ -139,13 +139,13 @@ const PortfolioAnalysis = () => {
       }
     }
 
-    // Asset allocation data
+    // Asset allocation data with improved colors
     const assetAllocation = [
-      { name: "SOL", value: 35, color: "rgba(20, 184, 166, 0.8)" },
-      { name: "ETH", value: 25, color: "rgba(56, 189, 248, 0.8)" },
-      { name: "BTC", value: 20, color: "rgba(139, 92, 246, 0.8)" },
-      { name: "AVAX", value: 10, color: "rgba(244, 114, 182, 0.8)" },
-      { name: "Other", value: 10, color: "rgba(251, 146, 60, 0.8)" }
+      { name: "SOL", value: 35, color: "rgba(20, 184, 166, 0.8)", hoverColor: "rgba(20, 184, 166, 1)" },
+      { name: "ETH", value: 25, color: "rgba(56, 189, 248, 0.8)", hoverColor: "rgba(56, 189, 248, 1)" },
+      { name: "BTC", value: 20, color: "rgba(139, 92, 246, 0.8)", hoverColor: "rgba(139, 92, 246, 1)" },
+      { name: "AVAX", value: 10, color: "rgba(244, 114, 182, 0.8)", hoverColor: "rgba(244, 114, 182, 1)" },
+      { name: "Other", value: 10, color: "rgba(251, 146, 60, 0.8)", hoverColor: "rgba(251, 146, 60, 1)" }
     ];
 
     // Performance metrics
@@ -257,6 +257,13 @@ const PortfolioAnalysis = () => {
   const barChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
+    animation: {
+      duration: 2000,
+      easing: 'easeInOutQuart'
+    },
+    hover: {
+      animationDuration: 300
+    },
     scales: {
       x: {
         grid: {
@@ -280,11 +287,45 @@ const PortfolioAnalysis = () => {
         display: false
       },
       tooltip: {
+        enabled: true,
+        backgroundColor: darkMode ? 'rgba(31, 41, 55, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+        titleColor: darkMode ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.9)',
+        bodyColor: darkMode ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.8)',
+        borderColor: darkMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(0, 0, 0, 0.1)',
+        borderWidth: 1,
+        cornerRadius: 8,
+        displayColors: true,
+        padding: 12,
+        titleFont: {
+          size: 14,
+          weight: 'bold'
+        },
+        bodyFont: {
+          size: 13
+        },
         callbacks: {
+          title: function(context: any) {
+            return context[0].label;
+          },
           label: function(context: any) {
-            return context.raw.toFixed(2) + '%';
+            const value = context.raw;
+            const sign = value >= 0 ? '+' : '';
+            return `Return: ${sign}${value.toFixed(2)}%`;
           }
         }
+      }
+    },
+    elements: {
+      bar: {
+        borderWidth: 2,
+        borderColor: darkMode ? '#1f2937' : '#f3f4f6',
+        hoverBorderWidth: 3,
+        hoverBorderColor: darkMode ? '#374151' : '#e5e7eb'
+      }
+    },
+    onHover: (event: any, activeElements: any) => {
+      if (event.native) {
+        event.native.target.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
       }
     }
   };
@@ -292,12 +333,73 @@ const PortfolioAnalysis = () => {
   const pieChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
+    cutout: '60%',
+    radius: '80%',
+    animation: {
+      animateRotate: true,
+      animateScale: true,
+      duration: 2000,
+      easing: 'easeInOutQuart'
+    },
+    hover: {
+      animationDuration: 300
+    },
     plugins: {
       legend: {
         position: 'right' as const,
         labels: {
-          color: darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)'
+          color: darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
+          usePointStyle: true,
+          pointStyle: 'circle',
+          padding: 20,
+          font: {
+            size: 14,
+            weight: '500'
+          }
         }
+      },
+      tooltip: {
+        enabled: true,
+        backgroundColor: darkMode ? 'rgba(31, 41, 55, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+        titleColor: darkMode ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.9)',
+        bodyColor: darkMode ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.8)',
+        borderColor: darkMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(0, 0, 0, 0.1)',
+        borderWidth: 1,
+        cornerRadius: 8,
+        displayColors: true,
+        padding: 12,
+        titleFont: {
+          size: 14,
+          weight: 'bold'
+        },
+        bodyFont: {
+          size: 13
+        },
+        callbacks: {
+          title: function(context: any) {
+            return context[0].label;
+          },
+          label: function(context: any) {
+            const label = context.label || '';
+            const value = context.parsed;
+            const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
+            const percentage = ((value / total) * 100).toFixed(1);
+            return `${label}: ${value}% (${percentage}% of total)`;
+          }
+        }
+      }
+    },
+    elements: {
+      arc: {
+        borderWidth: 2,
+        borderColor: darkMode ? '#1f2937' : '#f3f4f6',
+        hoverBorderWidth: 3,
+        hoverBorderColor: darkMode ? '#374151' : '#e5e7eb'
+      }
+    },
+    onHover: (event: any, activeElements: any) => {
+      if (event.native) {
+        event.native.target.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
       }
     }
   };
@@ -456,12 +558,18 @@ const PortfolioAnalysis = () => {
 
             {/* Asset Allocation and Monthly Returns */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <Card className={cardClasses}>
+              <Card className={`${cardClasses} hover:shadow-lg transition-shadow duration-300`}>
                 <CardHeader>
-                  <CardTitle className="text-white">Asset Allocation</CardTitle>
+                  <CardTitle className="text-white flex items-center gap-2">
+                    <div className="w-2 h-2 bg-teal-400 rounded-full"></div>
+                    Asset Allocation
+                  </CardTitle>
+                  <CardDescription className="text-gray-400">
+                    Portfolio distribution by asset
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-64">
+                  <div className="h-64 relative">
                     <Doughnut 
                       data={{
                         labels: portfolioData.assetAllocation.map((asset: any) => asset.name),
@@ -469,8 +577,12 @@ const PortfolioAnalysis = () => {
                           {
                             data: portfolioData.assetAllocation.map((asset: any) => asset.value),
                             backgroundColor: portfolioData.assetAllocation.map((asset: any) => asset.color),
-                            borderWidth: 1,
-                            borderColor: darkMode ? '#1f2937' : '#f3f4f6'
+                            borderColor: darkMode ? '#1f2937' : '#f3f4f6',
+                            borderWidth: 2,
+                            hoverBackgroundColor: portfolioData.assetAllocation.map((asset: any) => asset.hoverColor || asset.color),
+                            hoverBorderColor: darkMode ? '#374151' : '#e5e7eb',
+                            hoverBorderWidth: 3,
+                            hoverOffset: 8
                           }
                         ]
                       }} 
@@ -480,14 +592,33 @@ const PortfolioAnalysis = () => {
                 </CardContent>
               </Card>
               
-              <Card className={cardClasses}>
+              <Card className={`${cardClasses} hover:shadow-lg transition-shadow duration-300`}>
                 <CardHeader>
-                  <CardTitle className="text-white">Monthly Returns</CardTitle>
+                  <CardTitle className="text-white flex items-center gap-2">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                    Monthly Returns
+                  </CardTitle>
+                  <CardDescription className="text-gray-400">
+                    Performance by month
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-64">
+                  <div className="h-64 relative">
                     <Bar 
-                      data={portfolioData.monthlyReturns}
+                      data={{
+                        ...portfolioData.monthlyReturns,
+                        datasets: [
+                          {
+                            ...portfolioData.monthlyReturns.datasets[0],
+                            borderColor: portfolioData.monthlyReturns.datasets[0].backgroundColor,
+                            borderWidth: 2,
+                            hoverBorderWidth: 3,
+                            hoverBorderColor: darkMode ? '#374151' : '#e5e7eb',
+                            borderRadius: 4,
+                            borderSkipped: false,
+                          }
+                        ]
+                      }}
                       options={barChartOptions}
                     />
                   </div>

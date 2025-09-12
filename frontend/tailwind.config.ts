@@ -21,7 +21,7 @@ export default {
 		extend: {
 			fontFamily: {
 				mono: ['JetBrains Mono', 'monospace'],
-				sans: ['Open Sans', 'sans-serif'],
+				sans: ['Lexend', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',

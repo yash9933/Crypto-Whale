@@ -66,8 +66,8 @@
     "ethers": "^5.8.0",
     "firebase": "^10.9.0",
     "input-otp": "^1.2.4",
-    "lucide-react": "^0.462.0",
-    "next-themes": "^0.3.0",
+    "lucide-react": "^0.544.0",
+    "next-themes": "^0.4.6",
     "plaid": "^18.2.0",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.3.0",
@@ -79,11 +79,11 @@
     "react-resizable-panels": "^2.1.3",
     "react-router-dom": "^6.26.2",
     "recharts": "^2.12.7",
-    "sonner": "^1.5.0",
+    "sonner": "^2.0.7",
     "swr": "^2.3.3",
-    "tailwind-merge": "^2.5.2",
+    "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
-    "vaul": "^0.9.3",
+    "vaul": "^1.1.2",
     "web3": "^4.16.0",
     "zod": "^3.23.8",
     "zustand": "^5.0.3"
@@ -95,7 +95,7 @@
     "@types/node": "^22.5.5",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react-swc": "^3.5.0",
+    "@vitejs/plugin-react-swc": "^4.0.1",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.9.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
@@ -107,6 +107,6 @@
     "tailwindcss": "^3.4.11",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
-    "vite": "^5.4.1"
+    "vite": "^5.4.20"
   }
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../contexts/AuthContext';
+import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -8,10 +9,12 @@ import { Button } from "@/components/ui/button";
 import { Moon, Sun, Wallet, ArrowRightLeft, BarChart3, LineChart, Settings, LogOut, PieChart, DollarSign, Briefcase, Plus } from "lucide-react";
 
 const Dashboard = () => {
-  const { currentUser, userProfile, logout } = useAuth();
+  const { currentUser, userProfile, logout, updateUserProfile } = useAuth();
   const [loading, setLoading] = useState(true);
   const [darkMode, setDarkMode] = useState(true);
   const [hoveredCrypto, setHoveredCrypto] = useState(null);
+  const [displayName, setDisplayName] = useState('');
+  const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
 
   // Mock data for portfolio breakdown chart
@@ -49,14 +52,32 @@ const Dashboard = () => {
     return () => clearTimeout(timer);
   }, [currentUser, navigate]);
 
-  // Toggle between dark and light mode every 30 seconds
+
+  // Initialize display name when userProfile changes
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setDarkMode(prev => !prev);
-    }, 30000);
-    
-    return () => clearInterval(intervalId);
-  }, []);
+    if (userProfile?.displayName) {
+      setDisplayName(userProfile.displayName);
+    }
+  }, [userProfile]);
+
+  // Save profile changes
+  const handleSaveProfile = async () => {
+    if (!displayName.trim()) {
+      toast.error("Display name cannot be empty");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      await updateUserProfile(displayName.trim());
+      toast.success("Profile updated successfully!");
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error("Failed to update profile. Please try again.");
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -613,7 +634,9 @@ const Dashboard = () => {
                           <input 
                             type="text" 
                             className={`w-full ${darkMode ? "bg-gray-800 border-gray-700 text-white" : "bg-gray-100 border-gray-300 text-gray-900"} border rounded p-2 mt-1`}
-                            defaultValue={userProfile?.displayName || ''}
+                            value={displayName}
+                            onChange={(e) => setDisplayName(e.target.value)}
+                            placeholder="Enter your display name"
                           />
                         </div>
                         <div>
@@ -655,8 +678,12 @@ const Dashboard = () => {
                       </div>
                     </div>
                     <div className="pt-4">
-                      <Button className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700">
-                        Save Changes
+                      <Button 
+                        onClick={handleSaveProfile}
+                        disabled={saving}
+                        className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 disabled:opacity-50"
+                      >
+                        {saving ? "Saving..." : "Save Changes"}
                       </Button>
                     </div>
                   </div>
