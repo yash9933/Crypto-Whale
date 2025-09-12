@@ -6,16 +6,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun, Wallet, ArrowRightLeft, BarChart3, LineChart, Settings, LogOut, PieChart, DollarSign, Briefcase, Plus } from "lucide-react";
+import { Wallet, ArrowRightLeft, BarChart3, LineChart, Settings, LogOut, PieChart, DollarSign, Briefcase, Plus } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
+import { useSettingsStore } from "@/store/store";
 
 const Dashboard = () => {
   const { currentUser, userProfile, logout, updateUserProfile } = useAuth();
+  const { settings } = useSettingsStore();
   const [loading, setLoading] = useState(true);
-  const [darkMode, setDarkMode] = useState(true);
   const [hoveredCrypto, setHoveredCrypto] = useState(null);
   const [displayName, setDisplayName] = useState('');
   const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
+  
+  const darkMode = settings.darkMode;
 
   // Mock data for portfolio breakdown chart
   const portfolioData = [
@@ -88,9 +92,6 @@ const Dashboard = () => {
     }
   };
 
-  const toggleDarkMode = () => {
-    setDarkMode(prev => !prev);
-  };
 
   if (!currentUser) {
     return (
@@ -145,17 +146,7 @@ const Dashboard = () => {
             </p>
           </div>
           <div className="flex items-center gap-4 mt-4 md:mt-0">
-            <Button 
-              onClick={toggleDarkMode}
-              variant="outline" 
-              size="icon"
-              className={darkMode 
-                ? "border-teal-500 hover:bg-gray-800 hover:text-teal-300 text-teal-400" 
-                : "border-gray-300 hover:bg-gray-200"
-              }
-            >
-              {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </Button>
+            <ThemeToggle />
             <Button 
               onClick={handleLogout}
               variant="outline" 
@@ -652,29 +643,11 @@ const Dashboard = () => {
                     </div>
                     <div>
                       <p className={textHighlightClass + " mb-2"}>Theme Preferences</p>
-                      <div className="flex items-center space-x-2">
-                        <Button 
-                          onClick={toggleDarkMode}
-                          variant={darkMode ? "default" : "outline"}
-                          className={darkMode 
-                            ? "bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700" 
-                            : "border-gray-300 hover:bg-gray-200"
-                          }
-                        >
-                          <Moon className="h-4 w-4 mr-2" />
-                          Dark Mode
-                        </Button>
-                        <Button 
-                          onClick={toggleDarkMode}
-                          variant={!darkMode ? "default" : "outline"}
-                          className={!darkMode 
-                            ? "bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700" 
-                            : "border-teal-500 text-teal-400 hover:bg-gray-800 hover:text-teal-300"
-                          }
-                        >
-                          <Sun className="h-4 w-4 mr-2" />
-                          Light Mode
-                        </Button>
+                      <div className="flex items-center gap-3">
+                        <ThemeToggle />
+                        <span className="text-sm text-muted-foreground">
+                          {darkMode ? 'Dark Mode' : 'Light Mode'}
+                        </span>
                       </div>
                     </div>
                     <div className="pt-4">

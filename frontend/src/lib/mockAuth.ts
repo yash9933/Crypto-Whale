@@ -7,7 +7,7 @@ const mockUsers = [
     uid: 'test-user-123',
     email: 'test@example.com',
     password: 'password123',
-    displayName: 'Test User'
+    displayName: 'John'
   },
   {
     uid: 'user-456',
@@ -251,7 +251,7 @@ export function ensureTestUser(): void {
       uid: 'test-user-123',
       email: 'test@example.com',
       password: 'password123',
-      displayName: 'Test User'
+      displayName: 'John'
     });
   }
 }

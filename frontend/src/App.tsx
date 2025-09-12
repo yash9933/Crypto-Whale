@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Toaster } from "./components/ui/toaster";
 import { Toaster as Sonner } from "./components/ui/sonner";
 import { TooltipProvider } from "./components/ui/tooltip";
@@ -15,8 +16,15 @@ import { Register } from "./pages/Register";
 import { AuthProvider } from "./contexts/AuthContext";
 import { WalletContextProvider } from "./contexts/WalletContext";
 import { queryClient } from "./lib/queryClient";
+import { useSettingsStore } from "./store/store";
 
 const App = () => {
+  const { settings } = useSettingsStore();
+
+  // Apply theme globally
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', settings.darkMode);
+  }, [settings.darkMode]);
 
   return (
     <AuthProvider>

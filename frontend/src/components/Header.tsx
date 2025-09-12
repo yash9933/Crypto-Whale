@@ -1,20 +1,14 @@
 
-import { Moon, Sun, Settings } from 'lucide-react';
+import { Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSettingsStore } from '@/store/store';
 import { useState } from 'react';
 import SettingsModal from './SettingsModal';
+import ThemeToggle from './ThemeToggle';
 import { cn } from '@/lib/utils';
 
 const Header = () => {
-  const { settings, updateSettings } = useSettingsStore();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  
-  const toggleDarkMode = () => {
-    const newDarkMode = !settings.darkMode;
-    updateSettings({ darkMode: newDarkMode });
-    document.documentElement.classList.toggle('dark', newDarkMode);
-  };
   
   return (
     <header className="sticky top-0 z-30 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -33,14 +27,7 @@ const Header = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleDarkMode}
-            aria-label="Toggle theme"
-          >
-            {settings.darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </Button>
+          <ThemeToggle />
           <Button
             variant="ghost"
             size="icon"
